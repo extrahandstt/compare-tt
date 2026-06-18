@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 import Categories from "./pages/Categories";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import {initGA,trackPage} from "./analytics";
+import { initGA, trackPageView } from "./analytics";
 import {useEffect} from "react";
 
 
