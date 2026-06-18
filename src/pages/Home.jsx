@@ -125,7 +125,7 @@ color: "white",
     marginBottom: "8px"
   }}
 >
-  Compare TT
+  Compare TT Prices
 </h1>
 
 <p
@@ -174,7 +174,7 @@ and help the community save money by submitting prices.
       {/* RESULTS */}
       {results.map((p) => (
         <div key={p.id} style={{ marginTop: "10px" }}>
-          <Link to={`/product/${p.slug}`}>
+          <Link to={`/product/${p.slug}?location=${location}`}>
             {p.name}
           </Link>
         </div>
@@ -383,7 +383,7 @@ Compare prices →
     textAlign: "center"
   }}
 >
-  <h2>Why CompareTT?</h2>
+  <h2>Why CompareTT Prices?</h2>
 
   <p>
     Save money, compare prices, and help other shoppers

@@ -18,18 +18,7 @@ export default function Navbar() {
       }}
     >
 
-      <Link
-        to="/"
-        style={{
-          textDecoration:"none",
-          fontSize:"22px",
-          fontWeight:"bold",
-          color:"#111"
-        }}
-      >
-        CompareTT
-      </Link>
-
+      
 
       <div
         style={{

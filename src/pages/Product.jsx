@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-export default function Product({ location }) { 
+export default function Product() {
   const { slug } = useParams();
 
   const [product, setProduct] = useState(null);
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const [searchParams] = useSearchParams();
+
+const location = searchParams.get("location");
 
   
   useEffect(() => {
@@ -48,10 +51,12 @@ export default function Product({ location }) {
 
 
 if (location && location !== "all") {
-  priceQuery = priceQuery.eq(
-    "town",
-    location
-  );
+
+  priceQuery = priceQuery
+    .or(
+      `town.eq.${location},region.eq.${location}`
+    );
+
 }
 
 

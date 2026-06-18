@@ -8,10 +8,10 @@ export default function About() {
         lineHeight: "1.7"
       }}
     >
-      <h1>About CompareTT</h1>
+      <h1>About CompareTT Prices</h1>
 
       <p>
-        CompareTT is a community-powered price comparison platform
+        CompareTT Prices is a community-powered price comparison platform
         built for Trinidad & Tobago.
       </p>
 
@@ -23,7 +23,7 @@ export default function About() {
 
       <hr style={{ margin: "25px 0" }} />
 
-      <h2>How CompareTT Works</h2>
+      <h2>How CompareTT Prices Works</h2>
 
       <div style={cardStyle}>
         <h3>🔎 Search Products</h3>
@@ -59,7 +59,7 @@ export default function About() {
 
       <hr style={{ margin: "25px 0" }} />
 
-      <h2>Why Use CompareTT?</h2>
+      <h2>Why Use CompareTT Prices?</h2>
 
       <ul>
         <li>Save money before shopping</li>
@@ -104,9 +104,9 @@ export default function About() {
       </div>
 
       <div style={cardStyle}>
-        <h3>Does CompareTT sell products?</h3>
+        <h3>Does CompareTT Prices sell products?</h3>
         <p>
-          No. CompareTT only helps users compare prices.
+          No. CompareTT Prices only helps users compare prices.
         </p>
       </div>
     </div>

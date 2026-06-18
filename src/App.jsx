@@ -10,11 +10,21 @@ import Navbar from "./components/Navbar";
 import Categories from "./pages/Categories";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import {initGA,trackPage} from "./analytics";
+import {useEffect} from "react";
 
 
 
 export default function App() {
   const [location,setLocation] = useState("all");
+
+useEffect(()=>{
+
+initGA();
+
+},[]);
+
+
   return (
       <div style={{paddingBottom:"70px"}}>
 
