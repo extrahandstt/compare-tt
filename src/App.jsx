@@ -18,12 +18,10 @@ import {useEffect} from "react";
 export default function App() {
   const [location,setLocation] = useState("all");
 
-useEffect(()=>{
-
-initGA();
-
-},[]);
-
+useEffect(() => {
+  initGA();
+  trackPageView();
+}, []);
 
   return (
       <div style={{paddingBottom:"70px"}}>
