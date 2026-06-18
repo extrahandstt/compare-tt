@@ -21,14 +21,19 @@ useEffect(() => {
 }, []);
 
 async function fetchProducts() {
-  const { data } = await supabase
+
+  console.log("FETCH PRODUCTS RUNNING");
+
+  const { data, error } = await supabase
     .from("products")
-    .select("id, name, slug");
+    .select("*");
 
   console.log("PRODUCTS:", data);
+  console.log("PRODUCT ERROR:", error);
 
   setProducts(data || []);
 }
+
 async function fetchCategories() {
 
   const { data } = await supabase

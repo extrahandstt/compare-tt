@@ -28,21 +28,50 @@ const categoryDescription = {
   }, [slug]);
 
   async function fetchProducts() {
-    setLoading(true);
+  setLoading(true);
 
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("category_slug", slug);
+  // Get category ID from slug
+  const { data: category, error: categoryError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
 
-    if (error) {
-      console.log(error);
-    } else {
-      setProducts(data || []);
-    }
 
+  if (categoryError) {
+    console.log("CATEGORY ERROR:", categoryError);
     setLoading(false);
+    return;
   }
+
+
+  if (!category) {
+    console.log("No category found");
+    setLoading(false);
+    return;
+  }
+
+
+  // Get products using category_id
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category_id", category.id);
+
+
+  console.log("CATEGORY:", category);
+  console.log("CATEGORY PRODUCTS:", data);
+
+
+  if (error) {
+    console.log("PRODUCT ERROR:", error);
+  } else {
+    setProducts(data || []);
+  }
+
+
+  setLoading(false);
+}
 
   if (loading) return <h2>Loading...</h2>;
 
