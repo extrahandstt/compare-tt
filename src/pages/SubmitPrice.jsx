@@ -167,28 +167,13 @@ if (imageFile) {
 
 }
 
- if (!form.product_id) {
-  alert("Missing product");
-  return;
-}
-
-if (!form.variant_id) {
-  alert("Missing variant");
-  return;
-}
-
-if (!form.store_name) {
-  alert("Missing store");
-  return;
-}
-
-if (!form.area) {
-  alert("Missing area");
-  return;
-}
-
-if (form.price === "") {
-  alert("Missing price");
+ if (
+  !selectedProduct ||
+  !form.store_name ||
+  !form.area ||
+  !form.price
+) {
+  alert("Please complete all required fields");
   return;
 }
     const { data: existing } = await supabase
@@ -214,7 +199,7 @@ if (existing && existing.length > 0) {
        {
         
   product_id: form.product_id,
-  variant_id: form.variant_id,
+  variant_id: form.variant_id || null,
   store_name: form.store_name,
   region: form.region,
   town: form.town,
