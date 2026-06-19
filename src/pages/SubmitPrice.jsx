@@ -220,7 +220,8 @@ if (existing && existing.length > 0) {
 }
 
     ]);
-
+console.log("INSERT RESULT:", data);
+console.log("INSERT ERROR:", error);
 
   if (error) {
   console.log("SUBMIT ERROR:", error);

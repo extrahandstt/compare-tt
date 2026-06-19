@@ -23,13 +23,15 @@ const [variantUnit,setVariantUnit] = useState("");
 
   useEffect(() => {
 
-  if (authed) {
+  if (!authed) return;
 
-    fetchPending();
-    fetchCategories();
-    fetchProducts();
+  const loadAdmin = async () => {
+    await fetchPending();
+    await fetchCategories();
+    await fetchProducts();
+  };
 
-  }
+  loadAdmin();
 
 }, [authed]);
   function login() {
@@ -126,19 +128,13 @@ async function fetchProducts(){
   async function fetchPending() {
 
   const { data, error } = await supabase
-    .from("price_reports")
-    .select(`
-      *,
-      products(name),
-      product_variants(variant_name)
-    `)
-    .eq("approved", false)
+    .from("pending_price_reports")
+    .select("*")
     .order("created_at", { ascending:false });
 
 
-  console.log("PENDING:", data);
+  console.log("ALL REPORTS:", data);
   console.log("ERROR:", error);
-
 
   setPending(data || []);
 
@@ -242,12 +238,12 @@ async function addVariant(){
   async function approve(id) {
 
   const { error } = await supabase
-    .from("price_reports")
+    .from("pending_price_reports")
     .update({ approved: true })
     .eq("id", id);
 
 
-  console.log("UPDATE ERROR:", error);
+  console.log("APPROVE ERROR:", error);
 
 
   if(error){
@@ -259,12 +255,10 @@ async function addVariant(){
   await fetchPending();
 
 }
-  async function remove(id) {
-
-  console.log("Deleting:", id);
+ async function remove(id) {
 
   const { error } = await supabase
-    .from("price_reports")
+    .from("pending_price_reports")
     .delete()
     .eq("id", id);
 
@@ -278,7 +272,7 @@ async function addVariant(){
   }
 
 
-  fetchPending();
+  await fetchPending();
 
 }
   if (!authed) {
