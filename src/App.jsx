@@ -14,6 +14,7 @@ import { initGA, trackPageView } from "./analytics";
 import {useEffect} from "react";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
 
 
 export default function App() {
@@ -43,7 +44,10 @@ element={
       <Route path="/product/:slug" element={<Product />} />
       <Route path="/submit-price" element={<SubmitPrice />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-
+<Route
+  path="/terms"
+  element={<Terms />}
+/>
 <Route path="/contact" element={<Contact />} />
       <Route
   path="/about"

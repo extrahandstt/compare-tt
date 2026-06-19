@@ -70,6 +70,13 @@ Login
 </Link>
 
 <Link
+  to="/terms"
+  style={linkStyle}
+>
+  Terms
+</Link>
+
+<Link
   to="/contact"
   style={linkStyle}
 >

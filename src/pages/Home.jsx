@@ -13,7 +13,22 @@ export default function Home({location, setLocation}) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
-
+const categoryIcons = {
+  "groceries": "🛒",
+  "school-supplies": "📚",
+  "building-materials": "🏗️",
+  "hardware-tools": "🔨",
+  "electronics": "📱",
+  "home-kitchen": "🏠",
+  "automotive": "🚗",
+  "health-beauty": "💄",
+  "baby-products": "👶",
+  "cleaning-supplies": "🧼",
+  "appliances": "🔌",
+  "office-supplies": "🖨️",
+  "pet-supplies": "🐶",
+  "sports-outdoors": "⚽"
+};
 
 useEffect(() => {
   fetchTrending();
@@ -253,15 +268,7 @@ marginBottom:"10px"
 }}
 >
 
-{
-[
-"📚",
-"🛒",
-"🏗️",
-"📱",
-"🏠"
-][index % 5]
-}
+{categoryIcons[category.slug] || "🛍️"}
 
 </div>
 
