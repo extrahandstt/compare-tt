@@ -167,13 +167,23 @@ if (imageFile) {
 
 }
 
- if (
-  !selectedProduct ||
-  !form.store_name ||
-  !form.area ||
-  !form.price
-) {
-  alert("Please complete all required fields");
+ if (!form.product_id) {
+  alert("Missing product");
+  return;
+}
+
+if (!form.store_name) {
+  alert("Missing store");
+  return;
+}
+
+if (!form.area) {
+  alert("Missing area");
+  return;
+}
+
+if (!form.price) {
+  alert("Missing price");
   return;
 }
     const { data: existing } = await supabase
