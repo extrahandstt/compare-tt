@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import AdBanner from "../components/AdBanner";
 
 export default function Category() {
   const { slug } = useParams();
@@ -139,6 +140,7 @@ borderRadius:"10px"
 ))
       )}
       <hr style={{ marginTop: "30px" }} />
+      <AdBanner slot="7544600056" />
 
 <h2>
   Compare {slug?.replace("-", " ")} Prices

@@ -61,6 +61,20 @@ Login
 >
   About
 </Link>
+
+<Link
+  to="/privacy-policy"
+  style={linkStyle}
+>
+  Privacy Policy
+</Link>
+
+<Link
+  to="/contact"
+  style={linkStyle}
+>
+  Contact
+</Link>
       </div>
 
 

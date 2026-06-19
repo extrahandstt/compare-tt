@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
+import AdBanner from "../components/AdBanner";
 
 export default function Product() {
   const { slug } = useParams();
@@ -465,7 +466,7 @@ borderRadius:"8px"
         textDecoration:"none"
       }}
     >
-
+<AdBanner slot="5508363575" />
       <button
         style={{
           width:"100%",

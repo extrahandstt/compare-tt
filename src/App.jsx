@@ -12,7 +12,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { initGA, trackPageView } from "./analytics";
 import {useEffect} from "react";
-
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Contact from "./pages/Contact";
 
 
 export default function App() {
@@ -41,6 +42,9 @@ element={
       <Route path="/category/:slug" element={<Category />} />
       <Route path="/product/:slug" element={<Product />} />
       <Route path="/submit-price" element={<SubmitPrice />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+<Route path="/contact" element={<Contact />} />
       <Route
   path="/about"
   element={<About />}

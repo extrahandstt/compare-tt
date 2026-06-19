@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
 import LocationPicker from "../components/LocationPicker";
 import logo from "../assets/comparett-logo.png";
+import AdBanner from "../components/AdBanner";
 
 
 export default function Home({location, setLocation}) {
@@ -300,6 +301,8 @@ Compare prices →
 
 
 </div>
+<AdBanner slot="3077641350" />
+
       <h2 style={{ marginTop: "30px" }}>
   🔥 Trending Products
 </h2>
