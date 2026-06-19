@@ -167,17 +167,31 @@ if (imageFile) {
 
 }
 
- if (
-  !form.product_id ||
-  !form.variant_id ||
-  !form.store_name ||
-  !form.area ||
-  form.price === ""
-) {
-  alert("Please complete all required fields");
+ if (!form.product_id) {
+  alert("Missing product");
   return;
 }
-  const { data: existing } = await supabase
+
+if (!form.variant_id) {
+  alert("Missing variant");
+  return;
+}
+
+if (!form.store_name) {
+  alert("Missing store");
+  return;
+}
+
+if (!form.area) {
+  alert("Missing area");
+  return;
+}
+
+if (form.price === "") {
+  alert("Missing price");
+  return;
+}
+    const { data: existing } = await supabase
   .from("price_reports")
   .select("id")
   .eq("product_id", form.product_id)
@@ -198,6 +212,7 @@ if (existing && existing.length > 0) {
     .from("price_reports")
     .insert([
        {
+        
   product_id: form.product_id,
   variant_id: form.variant_id,
   store_name: form.store_name,
