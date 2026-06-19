@@ -168,11 +168,11 @@ if (imageFile) {
 }
 
  if (
-  !selectedProduct ||
-  !selectedVariant ||
+  !form.product_id ||
+  !form.variant_id ||
   !form.store_name ||
   !form.area ||
-  !form.price
+  form.price === ""
 ) {
   alert("Please complete all required fields");
   return;

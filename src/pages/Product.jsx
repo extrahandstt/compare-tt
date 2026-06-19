@@ -48,9 +48,8 @@ const location = searchParams.get("location");
   )
 `)
   .eq("product_id", productData.id)
-  .eq("approved", true);
-
-
+  .eq("approved", true)
+.order("price", { ascending: true });
 if (location && location !== "all") {
 
   priceQuery = priceQuery
