@@ -204,7 +204,7 @@ if (existing && existing.length > 0) {
 
 
   const { data, error } = await supabase
-    .from("pending_price_reports")
+    .from("price_reports")
     .insert([
        {
         
