@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
@@ -19,11 +19,15 @@ import Terms from "./pages/Terms";
 
 export default function App() {
   const [location,setLocation] = useState("all");
+  const routerLocation = useLocation();
 
 useEffect(() => {
   initGA();
-  trackPageView();
 }, []);
+
+useEffect(() => {
+  trackPageView();
+}, [routerLocation.pathname]);
 
   return (
       <div style={{paddingBottom:"70px"}}>
