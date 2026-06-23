@@ -64,9 +64,20 @@ export default function Deals() {
             </h3>
           )}
 
-          <p>
-            Ends: {deal.end_date}
-          </p>
+          {deal.while_stocks_last ? (
+  <p
+    style={{
+      color:"#f97316",
+      fontWeight:"600"
+    }}
+  >
+    🔥 While Stocks Last
+  </p>
+) : (
+  <p>
+    Ends: {deal.end_date}
+  </p>
+)}
         </div>
       ))}
     </div>

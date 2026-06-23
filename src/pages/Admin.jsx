@@ -27,6 +27,7 @@ const [dealRegular,setDealRegular] = useState("");
 const [dealSale,setDealSale] = useState("");
 const [dealEnd,setDealEnd] = useState("");
 const [dealImage,setDealImage] = useState(null);
+const [whileStocksLast, setWhileStocksLast] = useState(false);
 
   useEffect(() => {
 
@@ -303,6 +304,7 @@ dealSale
 Number(dealSale)
 :
 null,
+while_stocks_last: whileStocksLast,
 
 end_date: dealEnd,
 
@@ -996,7 +998,22 @@ placeholder="Sale price"
 value={dealSale}
 onChange={(e)=>setDealSale(e.target.value)}
 />
+<label
+style={{
+display:"flex",
+alignItems:"center",
+gap:"10px",
+marginBottom:"15px"
+}}
+>
+<input
+type="checkbox"
+checked={whileStocksLast}
+onChange={(e)=>setWhileStocksLast(e.target.checked)}
+/>
 
+While Stocks Last
+</label>
 
 <label>
 Deal ends
@@ -1006,6 +1023,7 @@ Deal ends
 type="date"
 style={inputStyle}
 value={dealEnd}
+disabled={whileStocksLast}
 onChange={(e)=>setDealEnd(e.target.value)}
 />
 
