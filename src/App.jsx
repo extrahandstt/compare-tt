@@ -15,6 +15,7 @@ import {useEffect} from "react";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
+import Deals from "./pages/Deals";
 
 
 export default function App() {
@@ -46,6 +47,7 @@ element={
 />
       <Route path="/category/:slug" element={<Category />} />
       <Route path="/product/:slug" element={<Product />} />
+      <Route path="/deals" element={<Deals />} />
       <Route path="/submit-price" element={<SubmitPrice />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 <Route

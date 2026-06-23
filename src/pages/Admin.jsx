@@ -20,6 +20,13 @@ const [selectedProduct,setSelectedProduct] = useState("");
 const [variantBrand,setVariantBrand] = useState("");
 const [variantSize,setVariantSize] = useState("");
 const [variantUnit,setVariantUnit] = useState("");
+const [dealTitle,setDealTitle] = useState("");
+const [dealStore,setDealStore] = useState("");
+const [dealDescription,setDealDescription] = useState("");
+const [dealRegular,setDealRegular] = useState("");
+const [dealSale,setDealSale] = useState("");
+const [dealEnd,setDealEnd] = useState("");
+const [dealImage,setDealImage] = useState(null);
 
   useEffect(() => {
 
@@ -234,6 +241,97 @@ async function addVariant(){
 
   }
 
+  }
+  async function addDeal(){
+
+let imageUrl = null;
+
+
+if(dealImage){
+
+const fileName =
+`${Date.now()}-${dealImage.name}`;
+
+
+const {error} = await supabase
+.storage
+.from("product-images")
+.upload(fileName,dealImage);
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+const {data} =
+supabase
+.storage
+.from("product-images")
+.getPublicUrl(fileName);
+
+
+imageUrl = data.publicUrl;
+
+}
+
+
+
+const {error} = await supabase
+.from("deals")
+.insert({
+
+title: dealTitle,
+
+store_name: dealStore,
+
+description: dealDescription,
+
+regular_price:
+dealRegular
+?
+Number(dealRegular)
+:
+null,
+
+sale_price:
+dealSale
+?
+Number(dealSale)
+:
+null,
+
+end_date: dealEnd,
+
+image_url:imageUrl,
+
+approved:false
+
+});
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+alert("Deal added");
+
+
+setDealTitle("");
+setDealStore("");
+setDealDescription("");
+setDealRegular("");
+setDealSale("");
+setDealEnd("");
+setDealImage(null);
+
 }
   async function approve(id) {
 
@@ -329,7 +427,8 @@ flexWrap:"wrap"
 ["prices","Pending Prices"],
 ["categories","Categories"],
 ["products","Products"],
-["variants","Variants"]
+["variants","Variants"],
+["deals","Deals"]
 
 ].map(([id,label])=>(
 
@@ -838,15 +937,113 @@ cursor:"pointer"
 Add Variant
 
 </button>
-
-
 </div>
 
 )}
 
 
+{tab==="deals" && (
+
+<div
+style={{
+background:"white",
+padding:"20px",
+borderRadius:"16px",
+boxShadow:"0 2px 10px rgba(0,0,0,.08)"
+}}
+>
+
+<h2>
+Add Deal
+</h2>
 
 
+<input
+style={inputStyle}
+placeholder="Deal title (Buy 2 Get 1 Free Coke)"
+value={dealTitle}
+onChange={(e)=>setDealTitle(e.target.value)}
+/>
+
+
+<input
+style={inputStyle}
+placeholder="Store name (Massy Stores)"
+value={dealStore}
+onChange={(e)=>setDealStore(e.target.value)}
+/>
+
+
+<textarea
+style={inputStyle}
+placeholder="Description"
+value={dealDescription}
+onChange={(e)=>setDealDescription(e.target.value)}
+/>
+
+
+<input
+style={inputStyle}
+placeholder="Regular price"
+value={dealRegular}
+onChange={(e)=>setDealRegular(e.target.value)}
+/>
+
+
+<input
+style={inputStyle}
+placeholder="Sale price"
+value={dealSale}
+onChange={(e)=>setDealSale(e.target.value)}
+/>
+
+
+<label>
+Deal ends
+</label>
+
+<input
+type="date"
+style={inputStyle}
+value={dealEnd}
+onChange={(e)=>setDealEnd(e.target.value)}
+/>
+
+
+<label>
+Deal Image
+</label>
+
+<input
+type="file"
+accept="image/*"
+onChange={(e)=>setDealImage(e.target.files[0])}
+/>
+
+
+<button
+
+onClick={addDeal}
+
+style={{
+marginTop:"15px",
+background:"#f97316",
+color:"white",
+padding:"12px 20px",
+border:"none",
+borderRadius:"10px"
+}}
+
+>
+
+Add Deal
+
+</button>
+
+
+</div>
+
+)}
 </div>
 
 );

@@ -9,81 +9,66 @@ export default function Navbar() {
         background:"white",
         padding:"15px 20px",
         borderBottom:"1px solid #eee",
-        display:"flex",
-        justifyContent:"space-between",
-        alignItems:"center",
         position:"sticky",
         top:0,
         zIndex:100
       }}
     >
 
-      
-
       <div
         style={{
           display:"flex",
-          gap:"15px"
+          gap:"12px",
+          flexWrap:"wrap",
+          alignItems:"center"
         }}
       >
 
-        <Link
-          to="/"
-          style={linkStyle}
-        >
+        <Link to="/" style={linkStyle}>
           Home
         </Link>
 
-
-        <Link
-          to="/categories"
-          style={linkStyle}
-        >
+        <Link to="/categories" style={linkStyle}>
           Categories
         </Link>
-<Link
-to="/login"
-style={linkStyle}
->
-Login
-</Link>
 
         <Link
-          to="/submit-price"
-          style={linkStyle}
+          to="/deals"
+          style={{
+            ...linkStyle,
+            color:"#f97316",
+            fontWeight:"700"
+          }}
         >
+          🔥 Store Deals
+        </Link>
+
+        <Link to="/login" style={linkStyle}>
+          Login
+        </Link>
+
+        <Link to="/submit-price" style={linkStyle}>
           Submit Price
         </Link>
 
-<Link
-  to="/about"
-  style={linkStyle}
->
-  About
-</Link>
+        <Link to="/about" style={linkStyle}>
+          About
+        </Link>
 
-<Link
-  to="/privacy-policy"
-  style={linkStyle}
->
-  Privacy Policy
-</Link>
+        <Link to="/privacy-policy" style={linkStyle}>
+          Privacy Policy
+        </Link>
 
-<Link
-  to="/terms"
-  style={linkStyle}
->
-  Terms
-</Link>
+        <Link to="/terms" style={linkStyle}>
+          Terms
+        </Link>
 
-<Link
-  to="/contact"
-  style={linkStyle}
->
-  Contact
-</Link>
+        <Link to="/contact" style={linkStyle}>
+          Contact
+        </Link>
+
+
       </div>
-
 
     </nav>
 
@@ -94,5 +79,8 @@ Login
 const linkStyle = {
   textDecoration:"none",
   color:"#555",
-  fontSize:"14px"
+  fontSize:"14px",
+  padding:"6px 8px",
+  borderRadius:"8px",
+  whiteSpace:"nowrap"
 };
