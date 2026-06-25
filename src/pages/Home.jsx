@@ -11,30 +11,46 @@ export default function Home({location, setLocation}) {
   const [results, setResults] = useState([]);
   const [trending, setTrending] = useState([]);
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [deals, setDeals] = useState([]);
+  
 
-const categoryIcons = {
-  "groceries": "🛒",
-  "school-supplies": "📚",
-  "building-materials": "🏗️",
-  "hardware-tools": "🔨",
-  "electronics": "📱",
-  "home-kitchen": "🏠",
-  "automotive": "🚗",
-  "health-beauty": "💄",
-  "baby-products": "👶",
-  "cleaning-supplies": "🧼",
-  "appliances": "🔌",
-  "office-supplies": "🖨️",
-  "pet-supplies": "🐶",
-  "sports-outdoors": "⚽"
-};
-
+const storeTypes = [
+  {
+    name: "Grocery",
+    icon: "🛒",
+    slug: "grocery",
+    color: "#ecfdf5"
+  },
+  {
+    name: "Pharmacy",
+    icon: "💊",
+    slug: "pharmacy",
+    color: "#eff6ff"
+  },
+  {
+    name: "Beauty",
+    icon: "💄",
+    slug: "beauty",
+    color: "#fdf2f8"
+  },
+  {
+    name: "Furniture",
+    icon: "🛋️",
+    slug: "furniture",
+    color: "#fef7ed"
+  },
+  {
+    name: "Books & Office",
+    icon: "📚",
+    slug: "books",
+    color: "#fefce8"
+  }
+];
 useEffect(() => {
   fetchTrending();
   fetchProducts();
-  fetchCategories();
-}, []);
+  fetchDeals();
+ }, []);
 
 async function fetchProducts() {
 
@@ -50,16 +66,6 @@ async function fetchProducts() {
   setProducts(data || []);
 }
 
-async function fetchCategories() {
-
-  const { data } = await supabase
-    .from("categories")
-    .select("*")
-    .order("name");
-
-  setCategories(data || []);
-
-}
 async function fetchTrending() {
   const { data } = await supabase
     .from("price_reports")
@@ -77,6 +83,22 @@ async function fetchTrending() {
     .slice(0, 5);
 
   setTrending(sorted); // ✅ FIXED
+}
+
+async function fetchDeals() {
+
+  const { data, error } = await supabase
+    .from("deals")
+    .select("*")
+    .gte("end_date", new Date().toISOString().split("T")[0])
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+
+  console.log(error);
+
+  setDeals(data || []);
+
 }
   
   async function handleSearch(e) {
@@ -197,118 +219,217 @@ and help the community save money by submitting prices.
       ))}
 
       <hr />
-
-      <h2 style={{marginTop:"30px"}}>
-  🛍 Browse Categories
+      <h2 style={{marginTop:"25px"}}>
+🔥 Deals Today
 </h2>
 
 
 <div
 style={{
 display:"grid",
-gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",
-gap:"15px",
-marginBottom:"25px"
+gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",
+gap:"12px"
 }}
 >
 
-
-{categories.map((category,index)=>(
-
+{deals.map((deal)=>(
 
 <Link
-
-key={category.id}
-
-to={`/category/${category.slug}`}
-
+key={deal.id}
+to="/deals"
 style={{
 textDecoration:"none",
 color:"inherit"
 }}
-
 >
-
-
-<div
-
-style={{
-
-padding:"20px",
-
-borderRadius:"18px",
-
-background:
-
-[
-"linear-gradient(135deg,#dbeafe,#eff6ff)",
-"linear-gradient(135deg,#dcfce7,#f0fdf4)",
-"linear-gradient(135deg,#fef3c7,#fffbeb)",
-"linear-gradient(135deg,#fce7f3,#fdf2f8)",
-"linear-gradient(135deg,#ede9fe,#f5f3ff)"
-
-][index % 5],
-
-boxShadow:
-"0 4px 12px rgba(0,0,0,0.08)",
-
-transition:"0.2s",
-
-minHeight:"100px"
-
-}}
-
->
-
 
 <div
 style={{
-fontSize:"32px",
-marginBottom:"10px"
+background:"#fff",
+padding:"12px",
+borderRadius:"12px",
+boxShadow:"0 2px 8px rgba(0,0,0,.08)"
 }}
 >
 
-{categoryIcons[category.slug] || "🛍️"}
-
-</div>
+{deal.image_url && (
+<img
+src={deal.image_url}
+alt={deal.title}
+style={{
+width:"100%",
+height:"100px",
+objectFit:"contain",
+borderRadius:"8px",
+background:"#f5f5f5"
+}}
+/>
+)}
 
 
 <h3
 style={{
-margin:0,
-fontSize:"17px"
+fontSize:"16px",
+margin:"10px 0 5px"
 }}
 >
-
-{category.name}
-
+{deal.title}
 </h3>
 
 
 <p
 style={{
-marginTop:"8px",
+fontSize:"14px",
+margin:"5px 0"
+}}
+>
+🏪 {deal.store_name}
+</p>
+
+
+<div>
+
+{deal.regular_price && (
+<span
+style={{
+fontSize:"13px",
+marginRight:"8px"
+}}
+>
+<s>${deal.regular_price}</s>
+</span>
+)}
+
+
+<span
+style={{
+color:"green",
+fontWeight:"700"
+}}
+>
+${deal.sale_price}
+</span>
+
+</div>
+
+
+</div>
+
+</Link>
+
+))}
+
+</div>
+
+
+<Link
+to="/deals"
+style={{
+display:"block",
+textAlign:"center",
+marginTop:"15px"
+}}
+>
+View all deals →
+</Link>
+<h2>
+🏪 Browse Stores
+</h2>
+
+<div
+style={{
+display:"grid",
+gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",
+gap:"15px"
+}}
+>
+
+{storeTypes.map((store)=>(
+
+<Link
+key={store.slug}
+to={`/stores/${store.slug}`}
+style={{
+textDecoration:"none",
+color:"#333"
+}}
+>
+
+<div
+style={{
+background:store.color,
+padding:"22px",
+borderRadius:"20px",
+textAlign:"center",
+boxShadow:"0 4px 12px rgba(0,0,0,.08)"
+}}
+>
+
+<div
+style={{
+fontSize:"40px"
+}}
+>
+{store.icon}
+</div>
+
+
+<h3>
+{store.name}
+</h3>
+
+
+<p
+style={{
 fontSize:"13px",
 color:"#666"
 }}
 >
-
-Compare prices →
-
+View Stores →
 </p>
 
 
 </div>
 
-
 </Link>
-
 
 ))}
 
+</div>
+      
+<AdBanner slot="3077641350" />
+<Link
+to="/shopping-list"
+style={{
+textDecoration:"none",
+color:"inherit"
+}}
+>
+
+<div
+style={{
+marginTop:"25px",
+background:"linear-gradient(135deg,#16a34a,#22c55e)",
+color:"white",
+padding:"25px",
+borderRadius:"18px",
+textAlign:"center",
+boxShadow:"0 12px 30px rgba(22,163,74,.25)",
+transform:"translateY(-3px)"
+}}
+>
+
+<h2>
+🛒 Build My Shopping List
+</h2>
+
+<p>
+Compare your grocery basket across stores.
+</p>
 
 </div>
-<AdBanner slot="3077641350" />
+
+</Link>
 
       <h2 style={{ marginTop: "30px" }}>
   🔥 Trending Products

@@ -16,6 +16,9 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import Deals from "./pages/Deals";
+import StorePrices from "./pages/StorePrices";
+import StoreCategory from "./pages/StoreCategory";
+import ShoppingList from "./pages/ShoppingList";
 
 
 export default function App() {
@@ -50,6 +53,14 @@ element={
       <Route path="/deals" element={<Deals />} />
       <Route path="/submit-price" element={<SubmitPrice />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route
+  path="/store/:storeName"
+  element={<StorePrices />}
+/>
+<Route
+path="/stores/:type"
+element={<StoreCategory />}
+/>
 <Route
   path="/terms"
   element={<Terms />}
@@ -62,6 +73,10 @@ element={
 <Route
   path="/categories"
   element={<Categories />}
+/>
+<Route
+  path="/shopping-list"
+  element={<ShoppingList />}
 />
 <Route path="/login" element={<Login />} />
 <Route path="/register" element={<Register />} />
