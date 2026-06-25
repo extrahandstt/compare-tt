@@ -397,7 +397,7 @@ View Stores →
 
 </div>
       
-<AdBanner slot="3077641350" />
+
 <Link
 to="/shopping-list"
 style={{

@@ -244,6 +244,12 @@ async function addVariant(){
 
   }
   async function addDeal(){
+    if (!whileStocksLast && !dealEnd) {
+
+  alert("Please select a deal end date");
+  return;
+
+}
 
 let imageUrl = null;
 
@@ -280,7 +286,7 @@ imageUrl = data.publicUrl;
 }
 
 
-
+console.log("whileStocksLast =", whileStocksLast);
 const {error} = await supabase
 .from("deals")
 .insert({
@@ -306,7 +312,7 @@ Number(dealSale)
 null,
 while_stocks_last: whileStocksLast,
 
-end_date: dealEnd,
+end_date: whileStocksLast ? null : dealEnd,
 
 image_url:imageUrl,
 
@@ -1011,6 +1017,9 @@ type="checkbox"
 checked={whileStocksLast}
 onChange={(e)=>setWhileStocksLast(e.target.checked)}
 />
+<p>
+While Stocks Last: {String(whileStocksLast)}
+</p>
 
 While Stocks Last
 </label>
