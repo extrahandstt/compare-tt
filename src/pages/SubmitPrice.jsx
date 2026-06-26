@@ -45,14 +45,11 @@ navigate("/login");
 });
 const [imageFile, setImageFile] = useState(null);
 
-const filteredProducts =
-products.filter(
-p =>
-p.category_id ===
-Number(
-selectedCategory
-)
-);
+const filteredProducts = products
+  .filter(
+    (p) => p.category_id === Number(selectedCategory)
+  )
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 
   useEffect(() => {

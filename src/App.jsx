@@ -20,7 +20,6 @@ import StorePrices from "./pages/StorePrices";
 import StoreCategory from "./pages/StoreCategory";
 import ShoppingList from "./pages/ShoppingList";
 
-
 export default function App() {
   const [location,setLocation] = useState("all");
   const routerLocation = useLocation();

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import LocationPicker from "../components/LocationPicker";
 import logo from "../assets/comparett-logo.png";
 import AdBanner from "../components/AdBanner";
+import FloatingContact from "../components/FloatingContact";
 
 
 export default function Home({location, setLocation}) {
@@ -537,6 +538,7 @@ border:"none"
     Learn More
   </Link>
 </div>
+<FloatingContact />
 </div>
     </div>
   );

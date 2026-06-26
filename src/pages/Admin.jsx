@@ -205,7 +205,11 @@ async function addVariant(){
   const generatedVariant =
   `${variantBrand} ${variantSize}${variantUnit}`.trim();
 
-
+console.log({
+  whileStocksLast,
+  dealEnd,
+  end_date: dealEnd || null,
+});
   const { data, error } = await supabase
   .from("product_variants")
   .insert({
@@ -287,38 +291,39 @@ imageUrl = data.publicUrl;
 
 
 console.log("whileStocksLast =", whileStocksLast);
-const {error} = await supabase
-.from("deals")
-.insert({
+const newDeal = {
 
-title: dealTitle,
+  title: dealTitle,
 
-store_name: dealStore,
+  store_name: dealStore,
 
-description: dealDescription,
+  description: dealDescription,
 
-regular_price:
-dealRegular
-?
-Number(dealRegular)
-:
-null,
+  regular_price: dealRegular
+    ? Number(dealRegular)
+    : null,
 
-sale_price:
-dealSale
-?
-Number(dealSale)
-:
-null,
-while_stocks_last: whileStocksLast,
+  sale_price: dealSale
+    ? Number(dealSale)
+    : null,
 
-end_date: whileStocksLast ? null : dealEnd,
+  while_stocks_last: whileStocksLast,
 
-image_url:imageUrl,
+  end_date: whileStocksLast
+    ? null
+    : (dealEnd || null),
 
-approved:false
+  image_url: imageUrl,
 
-});
+  approved: false
+
+};
+
+console.log(newDeal);
+
+const { error } = await supabase
+  .from("deals")
+  .insert(newDeal);
 
 
 if(error){

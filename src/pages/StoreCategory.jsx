@@ -16,8 +16,13 @@ export default function StoreCategory() {
       "Guangzhou Supermarket",
       "Low Cost Supermarket",
       "Happiness Supermarket",
-      "West Bees"
-    ],
+      "West Bees",
+      "Price Club",
+      "Pierre Road",
+      "Uncle Khalid",
+      "Persad's D Food King",
+      "ChaseMart"
+        ],
 
     pharmacy: [
       "SuperPharm",
@@ -27,7 +32,7 @@ export default function StoreCategory() {
 
     beauty: [
       "Pennywise",
-      "BelAir Store"
+      "Sasha Cosmetics"
     ],
 
     variety: [
@@ -36,12 +41,14 @@ export default function StoreCategory() {
 
     furniture: [
       "Furniture Plus",
-      "Courts"
+      "Courts",
+      "Standards"
     ],
 
     books: [
       "Charrans Bookstore",
-      "Unique Books and Sports Centre"
+      "Unique Books and Sports Centre",
+      "RIK Bookstore"
     ]
 
   };
@@ -56,6 +63,15 @@ export default function StoreCategory() {
     variety:"🏪"
   };
 
+
+const colors = {
+    grocery:"#dcfce7",
+    pharmacy:"#dbeafe",
+    beauty:"#fce7f3",
+    furniture:"#ffedd5",
+    books:"#fef3c7",
+    variety:"#e0f2fe"
+};
 
   return (
 
@@ -86,14 +102,14 @@ export default function StoreCategory() {
         >
 
           <div
-          style={{
-            background:"#fff",
-            padding:"20px",
-            borderRadius:"18px",
-            boxShadow:"0 4px 12px rgba(0,0,0,.08)",
-            textAlign:"center"
-          }}
-          >
+style={{
+  background: colors[type],
+  padding:"20px",
+  borderRadius:"18px",
+  boxShadow:"0 8px 20px rgba(0,0,0,.12)",
+  textAlign:"center"
+}}
+>
 
             <div style={{fontSize:"40px"}}>
               🏪

@@ -7,11 +7,15 @@
 </url>
 
 <url>
-<loc>https://compare-tt.vercel.app/categories</loc>
+<loc>https://compare-tt.vercel.app/shopping-list</loc>
 </url>
 
 <url>
 <loc>https://compare-tt.vercel.app/about</loc>
+</url>
+
+<url>
+<loc>https://compare-tt.vercel.app/deals</loc>
 </url>
 
 </urlset>
