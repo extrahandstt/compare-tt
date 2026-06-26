@@ -1,27 +1,36 @@
-import { supabase } from "../src/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
-export default async function handler(req, res) {
-
-  const { data: products } = await supabase
-    .from("products")
-    .select("slug");
-
-
-  const baseUrl = "https://compare-tt.vercel.app";
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_ANON_KEY
+);
 
 
-  const urls = [
-    `${baseUrl}/`,
-    `${baseUrl}/shopping-list`,
-    `${baseUrl}/about`,
-    ...(products || []).map(
-      (p)=>`${baseUrl}/product/${p.slug}`
-    )
-  ];
+export default async function handler(req,res){
+
+const {data:products,error}=await supabase
+.from("products")
+.select("slug");
 
 
-  const xml = `
-<?xml version="1.0" encoding="UTF-8"?>
+console.log(products,error);
+
+
+const base="https://compare-tt.vercel.app";
+
+
+const urls=[
+`${base}/`,
+`${base}/shopping-list`,
+`${base}/about`,
+`${base}/deals`,
+...(products || []).map(
+p=>`${base}/product/${p.slug}`
+)
+];
+
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 ${urls.map(url=>`
@@ -30,11 +39,14 @@ ${urls.map(url=>`
 </url>
 `).join("")}
 
-</urlset>
-`;
+</urlset>`;
 
 
-  res.setHeader("Content-Type","application/xml");
-  res.status(200).send(xml);
+res.setHeader(
+"Content-Type",
+"application/xml"
+);
+
+res.status(200).send(xml);
 
 }
