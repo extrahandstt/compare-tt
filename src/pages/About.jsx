@@ -1,3 +1,6 @@
+import { Helmet } from "react-helmet-async";
+
+
 export default function About() {
   return (
     <div
@@ -8,6 +11,14 @@ export default function About() {
         lineHeight: "1.7"
       }}
     >
+      <Helmet>
+  <title>About CompareTT</title>
+
+  <meta
+    name="description"
+    content="Learn how CompareTT helps shoppers across Trinidad & Tobago save money by comparing prices from local stores."
+  />
+</Helmet>
       <h1>About CompareTT Prices</h1>
 
       <p>

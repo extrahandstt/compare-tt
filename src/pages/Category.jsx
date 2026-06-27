@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import AdBanner from "../components/AdBanner";
+import { Helmet } from "react-helmet-async";
 
 export default function Category() {
   const { slug } = useParams();
@@ -78,6 +79,14 @@ const categoryDescription = {
 
   return (
     <div style={{ padding: "20px" }}>
+      <Helmet>
+  <title>Grocery Stores | CompareTT</title>
+
+  <meta
+    name="description"
+    content="Browse grocery stores in Trinidad & Tobago and compare prices before you shop."
+  />
+</Helmet>
       <h1>
   {categoryTitles[slug] || slug?.replace("-", " ")}
 </h1>

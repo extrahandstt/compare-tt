@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function StoreCategory() {
 
@@ -74,13 +75,26 @@ const colors = {
 };
 
   return (
+  <>
 
-    <div style={{padding:"20px"}}>
+    <Helmet>
+
+      <title>
+        {`${type.charAt(0).toUpperCase() + type.slice(1)} Stores in Trinidad & Tobago | CompareTT`}
+      </title>
+
+      <meta
+        name="description"
+        content={`Browse ${type} stores in Trinidad & Tobago. Compare prices, find deals and view products available at each store with CompareTT.`}
+      />
+
+    </Helmet>
+
+    <div style={{ padding: "20px" }}>
 
       <h1>
-        {icons[type]} {type}
+        {icons[type]} {type.charAt(0).toUpperCase() + type.slice(1)} Stores in Trinidad & Tobago
       </h1>
-
 
       <div
       style={{
@@ -132,7 +146,10 @@ style={{
       </div>
 
 
-    </div>
+        </div>
 
-  );
+  </>
+
+);
+
 }

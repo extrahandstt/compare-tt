@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { supabase } from "../lib/supabase";
+import { Helmet } from "react-helmet-async";
 
 export default function ShoppingList() {
 
@@ -155,7 +156,14 @@ setComparison(results);
       margin:"0 auto"
     }}
     >
+<Helmet>
+  <title>Shopping List Price Comparison | CompareTT</title>
 
+  <meta
+    name="description"
+    content="Build your shopping list and compare grocery prices across multiple supermarkets in Trinidad & Tobago."
+  />
+</Helmet>
       <h1>
         🛒 Shopping List
       </h1>

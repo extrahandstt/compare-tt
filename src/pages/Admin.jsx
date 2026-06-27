@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
+
 export default function Admin() {
   const [key, setKey] = useState("");
   const [authed, setAuthed] = useState(false);

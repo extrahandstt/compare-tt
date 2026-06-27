@@ -5,6 +5,7 @@ import LocationPicker from "../components/LocationPicker";
 import logo from "../assets/comparett-logo.png";
 import AdBanner from "../components/AdBanner";
 import FloatingContact from "../components/FloatingContact";
+import { Helmet } from "react-helmet-async";
 
 
 export default function Home({location, setLocation}) {
@@ -137,6 +138,50 @@ const productMap = Object.fromEntries(
 );
   return (
     <div style={{ padding: "20px" }}>
+      <Helmet>
+  <title>
+    CompareTT | Compare Grocery Prices in Trinidad & Tobago
+  </title>
+
+  <meta
+    name="description"
+    content="Compare grocery prices, supermarket deals, pharmacy prices, beauty products and more across Trinidad and Tobago. Save money before you shop with CompareTT."
+  />
+
+  <meta
+    name="keywords"
+    content="CompareTT, Trinidad grocery prices, supermarket prices Trinidad, Massy prices, Xtra Foods prices, grocery deals Trinidad, compare prices Trinidad, shopping Trinidad"
+  />
+
+  <script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CompareTT",
+  "url": "https://compare-tt.vercel.app",
+  "description":
+    "Compare grocery prices, supermarket deals, pharmacy prices and more across Trinidad & Tobago.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://compare-tt.vercel.app/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+})}
+</script>
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "CompareTT",
+  "url": "https://compare-tt.vercel.app",
+  "logo": "https://compare-tt.vercel.app/logo.png",
+  "sameAs": [
+    "https://facebook.com/comparett",
+    "https://tiktok.com/@marketlinktt"
+  ]
+})}
+</script>
+</Helmet>
       <div
   style={{
     background: "linear-gradient(135deg,#16a34a,#22c55e)",

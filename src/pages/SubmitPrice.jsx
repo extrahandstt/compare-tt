@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
-
+import { Helmet } from "react-helmet-async";
 
 export default function SubmitPrice() {
   const [products, setProducts] = useState([]);
@@ -256,6 +256,14 @@ const inputStyle = {
       padding: "20px"
     }}
   >
+    <Helmet>
+  <title>Submit a Price | CompareTT</title>
+
+  <meta
+    name="description"
+    content="Help shoppers across Trinidad & Tobago by submitting the latest prices from your local stores."
+  />
+</Helmet>
     <div
       style={{
         background: "linear-gradient(135deg,#16a34a,#22c55e)",

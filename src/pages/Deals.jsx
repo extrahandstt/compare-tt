@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { Helmet } from "react-helmet-async";
 
 export default function Deals() {
   const [deals, setDeals] = useState([]);
@@ -20,6 +21,14 @@ export default function Deals() {
 
   return (
     <div style={{ padding: "20px" }}>
+      <Helmet>
+  <title>Today's Deals | CompareTT</title>
+
+  <meta
+    name="description"
+    content="Browse the latest supermarket deals, discounts and special offers across Trinidad & Tobago."
+  />
+</Helmet>
       <h1>🔥 Store Specials & Deals</h1>
 
       {deals.map((deal) => (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { Helmet } from "react-helmet-async";
 
 export default function StorePrices() {
   const { storeName } = useParams();
@@ -36,6 +37,22 @@ export default function StorePrices() {
   }
 
   return (
+  <>
+
+    <Helmet>
+
+      <title>
+        {decodeURIComponent(storeName)} Prices in Trinidad & Tobago | CompareTT
+      </title>
+
+      <meta
+        name="description"
+        content={`Compare prices at ${decodeURIComponent(storeName)} in Trinidad & Tobago. View products, prices and shopper submissions on CompareTT.`}
+      />
+
+    </Helmet>
+
+
     <div style={{ padding: "20px" }}>
       <h1>🏪 {decodeURIComponent(storeName)}</h1>
 
@@ -79,6 +96,8 @@ export default function StorePrices() {
           </p>
         </div>
       ))}
-    </div>
+        </div>
+
+  </>
   );
 }
