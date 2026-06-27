@@ -22,16 +22,35 @@ export default async function handler(req, res) {
   const baseUrl = "https://compare-tt.vercel.app";
 
 
+  // ADD STORES HERE
+  const stores = [
+    "Massy Stores",
+    "Better Deals",
+    "Xtra Foods",
+    "PriceMart",
+    "SuperPharm",
+    "Pennywise"
+  ];
+
+
   const urls = [
     `${baseUrl}/`,
     `${baseUrl}/about`,
     `${baseUrl}/shopping-list`,
     `${baseUrl}/deals`,
 
+    // PRODUCT PAGES
     ...(products || []).map(
       (product) =>
         `${baseUrl}/product/${product.slug}`
-    )
+    ),
+
+    // STORE PAGES
+    ...(stores.map(
+      store =>
+        `${baseUrl}/store/${encodeURIComponent(store)}`
+    ))
+
   ];
 
 
@@ -42,6 +61,7 @@ export default async function handler(req, res) {
 ${urls.map(url => `
 <url>
 <loc>${url}</loc>
+<lastmod>${new Date().toISOString()}</lastmod>
 </url>
 `).join("")}
 
