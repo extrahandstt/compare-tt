@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 export default function StorePrices() {
   const { storeName } = useParams();
@@ -49,12 +50,35 @@ export default function StorePrices() {
         name="description"
         content={`Compare prices at ${decodeURIComponent(storeName)} in Trinidad & Tobago. View products, prices and shopper submissions on CompareTT.`}
       />
-
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": decodeURIComponent(storeName),
+  "description": `Compare prices at ${decodeURIComponent(storeName)} in Trinidad & Tobago.`,
+  "url": window.location.href,
+  "areaServed": {
+    "@type": "Country",
+    "name": "Trinidad and Tobago"
+  }
+})}
+</script>
     </Helmet>
 
 
     <div style={{ padding: "20px" }}>
-      <h1>🏪 {decodeURIComponent(storeName)}</h1>
+      <h1>
+🏪 {decodeURIComponent(storeName)} Prices
+</h1>
+
+<p>
+Compare prices at {decodeURIComponent(storeName)} across Trinidad & Tobago.
+</p>
+
+
+<Link to="/stores/grocery">
+← View all stores
+</Link>
 
       {prices.map((item) => (
         <div
@@ -81,7 +105,18 @@ export default function StorePrices() {
     }}
   />
 )}
-          <h3>{item.products?.name}</h3>
+          <Link
+  to={`/product/${item.products.slug}`}
+  style={{
+    textDecoration:"none",
+    color:"#16a34a",
+    fontWeight:"bold"
+  }}
+>
+  <h3>
+    {item.products?.name}
+  </h3>
+</Link>
 
           <p>
             📦 {item.product_variants?.variant_name}

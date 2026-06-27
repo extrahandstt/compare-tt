@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import AdBanner from "../components/AdBanner";
+import { Helmet } from "react-helmet-async";
+
 
 export default function Product() {
   const { slug } = useParams();
@@ -134,15 +136,51 @@ const cheapestStore = prices.find(
 );
 
   return (
-  <div
-    style={{
-      maxWidth: "700px",
-      margin: "0 auto",
-      padding: "16px",
-      fontFamily: "Arial, sans-serif"
-    }}
-  >
+  <>
+    <Helmet>
 
+      <title>
+        {product.name} Price Comparison | CompareTT
+      </title>
+
+      <meta
+        name="description"
+        content={`Compare prices for ${product.name} across Trinidad & Tobago. Find the cheapest prices before you shop.`}
+      />
+
+      <script type="application/ld+json">
+      {JSON.stringify({
+        "@context":"https://schema.org",
+        "@type":"Product",
+        "name": product.name,
+        "image": product.image_url,
+        "description": `Compare prices for ${product.name} in Trinidad & Tobago`,
+        "brand":{
+          "@type":"Brand",
+          "name": product.brand || "Unknown"
+        },
+        "offers":{
+          "@type":"AggregateOffer",
+          "priceCurrency":"TTD",
+          "lowPrice": lowest,
+          "highPrice": highest,
+          "offerCount": prices.length,
+          "availability":"https://schema.org/InStock"
+        }
+      })}
+      </script>
+
+    </Helmet>
+
+
+    <div
+      style={{
+        maxWidth: "700px",
+        margin: "0 auto",
+        padding: "16px",
+        fontFamily:"Arial, sans-serif"
+      }}
+    >
     {/* PRODUCT HEADER */}
     <div
       style={{
@@ -466,6 +504,31 @@ borderRadius:"8px"
       }}
     >
 <AdBanner slot="5508363575" />
+<h2>
+Related Shopping
+</h2>
+
+<Link
+to="/categories"
+style={{
+textDecoration:"none"
+}}
+>
+Browse all categories →
+</Link>
+
+
+<br/>
+
+
+<Link
+to="/deals"
+style={{
+textDecoration:"none"
+}}
+>
+See today's deals →
+</Link>
       <button
         style={{
           width:"100%",
@@ -512,5 +575,9 @@ borderRadius:"8px"
 
 
   </div>
+
+  </>
+
 );
+
 }
