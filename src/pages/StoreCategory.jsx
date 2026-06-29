@@ -22,7 +22,8 @@ export default function StoreCategory() {
       "Pierre Road",
       "Uncle Khalid",
       "Persad's D Food King",
-      "ChaseMart"
+      "ChaseMart",
+      "Cedric Dookie Supermarket"
         ],
 
     pharmacy: [
