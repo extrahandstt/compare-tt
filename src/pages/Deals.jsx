@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { Helmet } from "react-helmet-async";
 
 export default function Deals() {
+  console.log("DEALS PAGE LOADED");
   const [deals, setDeals] = useState([]);
 
   useEffect(() => {
@@ -10,15 +11,22 @@ export default function Deals() {
   }, []);
 
   async function fetchDeals() {
-    const { data } = await supabase
-      .from("deals")
-.select("*")
-.gte("end_date", new Date().toISOString().split("T")[0])
-.order("created_at", { ascending: false })
 
-    setDeals(data || []);
-  }
+  console.log("Fetching deals started");
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("deals")
+    .select("*");
+
+  console.log("TODAY:", today);
+  console.log("DEALS DATA:", data);
+  console.log("DEALS ERROR:", error);
+
+
+  setDeals(data || []);
+}
   return (
     <div style={{ padding: "20px" }}>
       <Helmet>

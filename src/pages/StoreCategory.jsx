@@ -50,7 +50,8 @@ export default function StoreCategory() {
     books: [
       "Charrans Bookstore",
       "Unique Books and Sports Centre",
-      "RIK Bookstore"
+      "RIK Bookstore",
+      "Paper Based Bookshop"
     ]
 
   };
