@@ -55,26 +55,51 @@ const categoryDescription = {
 
 
   // Get products using category_id
-  const { data, error } = await supabase
+  const { data: products, error: productError } = await supabase
     .from("products")
     .select("*")
-    .eq("category_id", category.id);
+    .eq("category_id", category.id)
+    .order("name", { ascending: true });
 
-
-  console.log("CATEGORY:", category);
-  console.log("CATEGORY PRODUCTS:", data);
-
-
-  if (error) {
-    console.log("PRODUCT ERROR:", error);
-  } else {
-    setProducts(data || []);
+    if (productError) {
+    console.log("PRODUCT ERROR:", productError);
+    setLoading(false);
+    return;
   }
 
+const productsWithVariants = await Promise.all(
+  products.map(async (product) => {
 
+   const { data: variants, error } = await supabase
+        .from("product_variants")
+        .select("*")
+        .eq("product_id", product.id);
+
+console.log("PRODUCT ID:", product.id);
+console.log("VARIANTS FOUND:", variants);
+
+ if (error) {
+        console.log("VARIANT ERROR:", error);
+      }
+
+
+    return {
+        ...product,
+        variants: variants || [],
+        variant_count: variants?.length || 0
+      };
+    })
+  );
+
+setProducts(productsWithVariants);
+
+  console.log("CATEGORY:", category);
+  console.log("PRODUCTS:", productsWithVariants);
+  
   setLoading(false);
 }
 
+   
   if (loading) return <h2>Loading...</h2>;
 
   return (
@@ -136,14 +161,24 @@ borderRadius:"10px"
 <strong>{p.name}</strong>
 
       <div
-        style={{
-          fontSize: "14px",
-          color: "#666",
-          marginTop: "5px"
-        }}
-      >
-        View price comparisons
-      </div>
+  style={{
+    fontSize: "14px",
+    color: "#666",
+    marginTop: "5px"
+  }}
+>
+  {p.variant_count || 0} variants available
+</div>
+
+<div
+  style={{
+    color: "#16a34a",
+    fontWeight: "600",
+    marginTop: "4px"
+  }}
+>
+  Compare prices →
+</div>
     </div>
   </Link>
 ))

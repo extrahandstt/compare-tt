@@ -11,19 +11,19 @@ export default function Deals() {
   }, []);
 
   async function fetchDeals() {
-
   console.log("Fetching deals started");
 
   const today = new Date().toISOString().split("T")[0];
 
   const { data, error } = await supabase
     .from("deals")
-    .select("*");
+    .select("*")
+    .or(`while_stocks_last.eq.true,end_date.gte.${today}`)
+    .order("created_at", { ascending: false });
 
   console.log("TODAY:", today);
   console.log("DEALS DATA:", data);
   console.log("DEALS ERROR:", error);
-
 
   setDeals(data || []);
 }

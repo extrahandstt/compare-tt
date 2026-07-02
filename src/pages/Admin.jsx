@@ -29,20 +29,62 @@ const [dealSale,setDealSale] = useState("");
 const [dealEnd,setDealEnd] = useState("");
 const [dealImage,setDealImage] = useState(null);
 const [whileStocksLast, setWhileStocksLast] = useState(false);
+const [businesses,setBusinesses] = useState([]);
+const [editBusinessId,setEditBusinessId] = useState("");
+const [partnerLogo,setPartnerLogo] = useState(null);
+const [partnerMode,setPartnerMode] = useState("new");
+const [partnerStatus,setPartnerStatus] = useState("none");
+
+const [businessName,setBusinessName] = useState("");
+const [businessCategory,setBusinessCategory] = useState("");
+const [businessDescription,setBusinessDescription] = useState("");
+const [businessLocation,setBusinessLocation] = useState("");
+const [businessPhone,setBusinessPhone] = useState("");
+const [businessWhatsapp,setBusinessWhatsapp] = useState("");
+const [businessEmail,setBusinessEmail] = useState("");
+const [businessWebsite,setBusinessWebsite] = useState("");
+const [partnerRequests,setPartnerRequests] = useState([]);
+
+useEffect(()=>{
+
+if(!editBusinessId) return;
+
+const biz = businesses.find(b => b.id == editBusinessId);
+
+if(!biz) return;
+
+setBusinessName(biz.name || "");
+setBusinessCategory(biz.category || "");
+setBusinessDescription(biz.description || "");
+setBusinessLocation(biz.location || "");
+setBusinessPhone(biz.phone || "");
+setBusinessWhatsapp(biz.whatsapp || "");
+setBusinessEmail(biz.email || "");
+setBusinessWebsite(biz.website || "");
+setPartnerStatus(biz.partner_status || "none");
+},[editBusinessId]);
 
   useEffect(() => {
 
   if (!authed) return;
 
   const loadAdmin = async () => {
-    await fetchPending();
-    await fetchCategories();
-    await fetchProducts();
-  };
 
+  await fetchPending();
+
+  await fetchCategories();
+
+  await fetchProducts();
+
+  await fetchBusinesses();
+await fetchPartnerRequests();
+
+};
   loadAdmin();
 
 }, [authed]);
+
+
   function login() {
     if (key === import.meta.env.VITE_ADMIN_KEY) {
       setAuthed(true);
@@ -124,6 +166,26 @@ setProductImage(null);
 fetchProducts();
 
 }
+async function fetchPartnerRequests(){
+
+const {data,error} = await supabase
+.from("partner_requests")
+.select("*")
+.eq("status","pending")
+.order("created_at",{ascending:false});
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+setPartnerRequests(data || []);
+
+}
 async function fetchProducts(){
 
   const { data } = await supabase
@@ -149,7 +211,163 @@ async function fetchProducts(){
 
 }
   
+async function fetchBusinesses(){
 
+  const {data,error} = await supabase
+    .from("stores")
+    .select("*")
+    .order("name");
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  setBusinesses(data || []);
+}
+
+async function updateBusiness(){
+
+if(!editBusinessId){
+
+alert("Select a business first");
+return;
+
+}
+
+
+let logoUrl = null;
+
+
+if(partnerLogo){
+
+
+const fileName =
+`${Date.now()}-${partnerLogo.name}`;
+
+
+const {error:uploadError} = await supabase
+.storage
+.from("product-images")
+.upload(fileName, partnerLogo);
+
+
+if(uploadError){
+
+alert(uploadError.message);
+return;
+
+}
+
+
+const {data} =
+supabase
+.storage
+.from("product-images")
+.getPublicUrl(fileName);
+
+
+logoUrl = data.publicUrl;
+
+
+}
+
+
+
+const updateData = {
+
+
+name: businessName,
+
+category: businessCategory,
+
+description: businessDescription,
+
+location: businessLocation,
+
+phone: businessPhone,
+
+whatsapp: businessWhatsapp,
+
+email: businessEmail,
+
+website: businessWebsite,
+
+
+};
+
+
+
+if(logoUrl){
+
+updateData.logo_url = logoUrl;
+
+}
+
+
+
+const {error} = await supabase
+.from("stores")
+.update(updateData)
+.eq("id", editBusinessId);
+
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+
+alert("Business profile saved");
+
+
+fetchBusinesses();
+
+
+}
+
+async function updatePartnerStatus(){
+
+if(!editBusinessId){
+
+alert("Select a business first");
+return;
+
+}
+
+
+const {error} = await supabase
+.from("stores")
+.update({
+
+partner_status: partnerStatus,
+
+verified: partnerStatus === "verified" || partnerStatus === "founding",
+
+featured: partnerStatus === "founding"
+
+})
+.eq("id", editBusinessId);
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+alert("Partner status updated");
+
+
+fetchBusinesses();
+
+}
 async function fetchCategories() {
 
   const { data } = await supabase
@@ -367,6 +585,86 @@ setDealImage(null);
   await fetchPending();
 
 }
+async function approvePartner(id){
+
+
+const request =
+partnerRequests.find(p=>p.id===id);
+
+
+if(!request) return;
+
+
+
+const slug =
+request.business_name
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]+/g,"-");
+
+
+
+const {error} = await supabase
+.from("stores")
+.insert({
+
+name: request.business_name,
+
+slug,
+
+category: request.category,
+
+description: request.description,
+
+location: request.location,
+
+phone: request.phone,
+
+whatsapp: request.whatsapp,
+
+email: request.email,
+
+website: request.website,
+
+logo_url: request.logo_url,
+
+
+partner_status:"future",
+
+verified:false,
+
+featured:false
+
+
+});
+
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+
+
+await supabase
+.from("partner_requests")
+.update({
+status:"approved"
+})
+.eq("id",id);
+
+
+
+alert("Business approved");
+
+
+fetchPartnerRequests();
+fetchBusinesses();
+
+
+}
  async function remove(id) {
 
   const { error } = await supabase
@@ -412,6 +710,7 @@ borderRadius:"10px",
 border:"1px solid #ddd"
 
 };
+
   return (
 
 <div
@@ -442,6 +741,8 @@ flexWrap:"wrap"
 ["categories","Categories"],
 ["products","Products"],
 ["variants","Variants"],
+["businesses","Businesses"],
+["requests","Partner Requests"],
 ["deals","Deals"]
 
 ].map(([id,label])=>(
@@ -954,7 +1255,207 @@ Add Variant
 </div>
 
 )}
+{tab === "businesses" && (
 
+<div
+style={{
+background:"#fff",
+padding:"20px",
+borderRadius:"16px"
+}}
+>
+
+<h2>Business Manager</h2>
+
+<select
+style={inputStyle}
+value={editBusinessId}
+onChange={(e)=>setEditBusinessId(e.target.value)}
+>
+
+<option value="">
+Select Business
+</option>
+
+{businesses.map((b)=>(
+
+<option
+key={b.id}
+value={b.id}
+>
+
+{b.name}
+
+</option>
+
+))}
+
+</select>
+<label>Partner Level</label>
+
+<select
+style={inputStyle}
+value={partnerStatus}
+onChange={(e)=>setPartnerStatus(e.target.value)}
+>
+
+<option value="none">No Partner</option>
+<option value="future">Future Partner</option>
+<option value="verified">Verified Partner</option>
+<option value="founding">Founding Partner</option>
+
+</select>
+<input
+style={inputStyle}
+placeholder="Business Name"
+value={businessName}
+onChange={(e)=>setBusinessName(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="Category"
+value={businessCategory}
+onChange={(e)=>setBusinessCategory(e.target.value)}
+/>
+
+<textarea
+style={inputStyle}
+placeholder="Description"
+value={businessDescription}
+onChange={(e)=>setBusinessDescription(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="Location"
+value={businessLocation}
+onChange={(e)=>setBusinessLocation(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="Phone"
+value={businessPhone}
+onChange={(e)=>setBusinessPhone(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="WhatsApp"
+value={businessWhatsapp}
+onChange={(e)=>setBusinessWhatsapp(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="Email"
+value={businessEmail}
+onChange={(e)=>setBusinessEmail(e.target.value)}
+/>
+
+<input
+style={inputStyle}
+placeholder="Website"
+value={businessWebsite}
+onChange={(e)=>setBusinessWebsite(e.target.value)}
+/>
+<label>Business Logo</label>
+
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => setPartnerLogo(e.target.files[0])}
+/>
+<button
+onClick={updateBusiness}
+style={{
+background:"#16a34a",
+color:"#fff",
+padding:"12px 20px",
+border:"none",
+borderRadius:"10px",
+marginTop:"15px"
+}}
+>
+Save Business
+</button>
+
+<button
+onClick={updatePartnerStatus}
+style={{
+background:"#2563eb",
+color:"#fff",
+padding:"12px 20px",
+border:"none",
+borderRadius:"10px",
+marginTop:"15px",
+marginLeft:"10px"
+}}
+>
+Update Partner
+</button>
+</div>
+
+)}
+
+{tab==="requests" && (
+
+<div>
+
+<h2>
+Pending Partner Requests
+</h2>
+
+
+{partnerRequests.map((p)=>(
+
+<div
+key={p.id}
+style={{
+background:"white",
+padding:"20px",
+borderRadius:"12px",
+marginBottom:"15px"
+}}
+>
+
+
+<h3>{p.business_name}</h3>
+
+<p>{p.category}</p>
+
+<p>{p.location}</p>
+
+<p>{p.whatsapp}</p>
+
+
+<button
+
+onClick={()=>approvePartner(p.id)}
+
+style={{
+background:"#16a34a",
+color:"white",
+padding:"10px",
+borderRadius:"8px"
+}}
+
+>
+
+Approve Business
+
+</button>
+
+
+</div>
+
+))}
+
+
+</div>
+
+)}
 
 {tab==="deals" && (
 

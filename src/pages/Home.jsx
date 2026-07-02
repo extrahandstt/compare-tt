@@ -8,13 +8,14 @@ import FloatingContact from "../components/FloatingContact";
 import { Helmet } from "react-helmet-async";
 
 
+
 export default function Home({location, setLocation}) {
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
   const [trending, setTrending] = useState([]);
   const [products, setProducts] = useState([]);
   const [deals, setDeals] = useState([]);
-  
+  const [showPartnerPopup, setShowPartnerPopup] = useState(false);
 
 const storeTypes = [
   {
@@ -54,13 +55,39 @@ useEffect(() => {
   fetchDeals();
  }, []);
 
+ useEffect(() => {
+  const seen = localStorage.getItem("partner_popup_seen");
+
+  if (!seen) {
+    const timer = setTimeout(() => {
+      setShowPartnerPopup(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }
+}, []);
+
+useEffect(() => {
+  if (!showPartnerPopup) return;
+
+  const timer = setTimeout(() => {
+    setShowPartnerPopup(false);
+    localStorage.setItem("partner_popup_seen", "true");
+  }, 8000);
+
+  return () => clearTimeout(timer);
+}, [showPartnerPopup]);
+
 async function fetchProducts() {
 
   console.log("FETCH PRODUCTS RUNNING");
 
   const { data, error } = await supabase
-    .from("products")
-    .select("*");
+  .from("products")
+  .select(`
+    *,
+    product_variants(count)
+  `);
 
   console.log("PRODUCTS:", data);
   console.log("PRODUCT ERROR:", error);
@@ -88,19 +115,29 @@ async function fetchTrending() {
 }
 
 async function fetchDeals() {
+  const today = new Date().toISOString().split("T")[0];
 
   const { data, error } = await supabase
     .from("deals")
     .select("*")
-    .gte("end_date", new Date().toISOString().split("T")[0])
-    .order("created_at", { ascending: false })
-    .limit(5);
+    .or(`while_stocks_last.eq.true,end_date.gte.${today}`)
+    .order("created_at", { ascending: false });
 
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-  console.log(error);
+  const whileStocks = data.filter(d => d.while_stocks_last);
+  const datedDeals = data.filter(d => !d.while_stocks_last);
 
-  setDeals(data || []);
+  // 3 while stocks + 2 dated deals
+  const homepageDeals = [
+    ...whileStocks.slice(0, 3),
+    ...datedDeals.slice(0, 2)
+  ];
 
+  setDeals(homepageDeals);
 }
   
   async function handleSearch(e) {
@@ -112,12 +149,62 @@ async function fetchDeals() {
     return;
   }
 
+  // Search products
+  // Search products + categories
+// Search products
+const { data: productResults } = await supabase
+  .from("products")
+  .select("*")
+  .ilike("name", `%${value}%`);
+
+
+// Search categories
+const { data: categoryResults } = await supabase
+  .from("categories")
+  .select("id")
+  .ilike("name", `%${value}%`);
+
+
+let categoryProducts = [];
+
+if (categoryResults?.length) {
+
+  const categoryIds = categoryResults.map(c => c.id);
+
   const { data } = await supabase
     .from("products")
     .select("*")
-    .ilike("name", `%${value}%`);
+    .in("category_id", categoryIds);
 
-  setResults(data || []); // ✅ FIXED
+  categoryProducts = data || [];
+}
+  // Search variants (includes product)
+  const { data: variantResults } = await supabase
+    .from("product_variants")
+    .select(`
+      variant_name,
+      products(*)
+    `)
+    .ilike("variant_name", `%${value}%`);
+
+  // Merge results
+  const merged = [
+  ...(productResults || []),
+  ...categoryProducts,
+  ...((variantResults || []).map(v => ({
+    ...v.products,
+    match: v.variant_name
+  })))
+];
+
+  // Remove duplicates
+  const unique = Array.from(
+    new Map(
+      merged.map(product => [product.id, product])
+    ).values()
+  );
+
+  setResults(unique);
 }
 const searchProducts = async (term) => {
   const { data } = await supabase
@@ -138,6 +225,66 @@ const productMap = Object.fromEntries(
 );
   return (
     <div style={{ padding: "20px" }}>
+      {showPartnerPopup && (
+      <div
+        style={{
+          position: "fixed",
+          top: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "90%",
+          maxWidth: "450px",
+          background: "white",
+          borderRadius: "14px",
+          padding: "18px",
+          boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
+          zIndex: 9999
+        }}
+      >
+        <h3 style={{ marginTop: 0 }}>
+          🏪 Become a CompareTT Partner
+        </h3>
+
+        <p style={{ color: "#555", fontSize: "14px" }}>
+          List your products and reach shoppers in Trinidad & Tobago.
+        </p>
+
+        <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
+          
+          <Link
+            to="/partner"
+            style={{
+              flex: 1,
+              background: "#16a34a",
+              color: "white",
+              textAlign: "center",
+              padding: "10px",
+              borderRadius: "10px",
+              textDecoration: "none"
+            }}
+          >
+            Apply Now
+          </Link>
+
+          <button
+            onClick={() => {
+              setShowPartnerPopup(false);
+              localStorage.setItem("partner_popup_seen", "true");
+            }}
+            style={{
+              flex: 1,
+              background: "#eee",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer"
+            }}
+          >
+            Close
+          </button>
+
+        </div>
+      </div>
+    )}
       <Helmet>
   <title>
     CompareTT | Compare Grocery Prices in Trinidad & Tobago
@@ -238,7 +385,7 @@ and help the community save money by submitting prices.
   setLocation={setLocation}
 />
   <input
-    placeholder="Search products..."
+    placeholder="Search products and categories..."
     value={term}
     onChange={handleSearch}
     style={{
@@ -257,12 +404,35 @@ and help the community save money by submitting prices.
       
       {/* RESULTS */}
       {results.map((p) => (
-        <div key={p.id} style={{ marginTop: "10px" }}>
-          <Link to={`/product/${p.slug}?location=${location}`}>
-            {p.name}
-          </Link>
+  <div key={p.id} style={{ marginTop: "10px" }}>
+    <Link
+      to={`/product/${p.slug}?location=${location}`}
+      style={{
+        display: "block",
+        padding: "12px",
+        background: "#fff",
+        borderRadius: "10px",
+        textDecoration: "none",
+        color: "#222",
+        marginBottom: "8px"
+      }}
+    >
+      <strong>{p.name}</strong>
+
+      {p.match && (
+        <div
+          style={{
+            color: "#16a34a",
+            fontSize: "13px",
+            marginTop: "4px"
+          }}
+        >
+          Matched: {p.match}
         </div>
-      ))}
+      )}
+    </Link>
+  </div>
+))}
 
       <hr />
       <h2 style={{marginTop:"25px"}}>

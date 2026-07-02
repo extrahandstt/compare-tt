@@ -41,7 +41,8 @@ navigate("/login");
   region: "",
   town: "",
   area: "",
-  price: ""
+  price: "",
+  description: ""
 });
 const [imageFile, setImageFile] = useState(null);
 
@@ -211,9 +212,10 @@ if (existing && existing.length > 0) {
   region: form.region,
   town: form.town,
   area: form.area,
-  price: Number(form.price),
-  image_url: imageUrl,
-  approved: false
+ price: Number(form.price),
+description: form.description || null,
+image_url: imageUrl,
+approved: false
 }
 
     ]);
@@ -234,7 +236,8 @@ console.log("INSERT ERROR:", error);
   region: "",
   town: "",
   area: "",
-  price: ""
+  price: "",
+  description: ""
 });
   }
 }
@@ -615,6 +618,21 @@ value={v.id}
         onChange={handleChange}
         style={inputStyle}
       />
+      <label>
+Description (Optional)
+</label>
+
+<textarea
+  name="description"
+  placeholder="Example: Special offer, promotion, size details..."
+  value={form.description}
+  onChange={handleChange}
+  style={{
+    ...inputStyle,
+    height:"90px",
+    resize:"vertical"
+  }}
+/>
 <label>
 Product Image (optional)
 </label>

@@ -19,6 +19,8 @@ import Deals from "./pages/Deals";
 import StorePrices from "./pages/StorePrices";
 import StoreCategory from "./pages/StoreCategory";
 import ShoppingList from "./pages/ShoppingList";
+import PartnerForm from "./components/PartnerForm";
+import PartnerLanding from "./pages/PartnerLanding";
 
 export default function App() {
   const [location,setLocation] = useState("all");
@@ -52,6 +54,7 @@ element={
       <Route path="/deals" element={<Deals />} />
       <Route path="/submit-price" element={<SubmitPrice />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/PartnerLanding" element={<PartnerLanding />} />
       <Route
   path="/store/:storeName"
   element={<StorePrices />}
@@ -80,6 +83,10 @@ element={<StoreCategory />}
 <Route path="/login" element={<Login />} />
 <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<Admin />} />
+      <Route 
+path="/partner" 
+element={<PartnerForm />} 
+/>
     </Routes>
     </div>
   );

@@ -1,62 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import PartnerBadge from "../components/PartnerBadge";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 export default function StoreCategory() {
 
   const { type } = useParams();
-
-  const stores = {
-
-    grocery: [
-      "Massy Stores",
-      "Better Deals",
-      "Xtra Foods",
-      "PriceMart",
-      "Janam Supermarket",
-      "JTA Supermarket",
-      "Guangzhou Supermarket",
-      "Low Cost Supermarket",
-      "Happiness Supermarket",
-      "West Bees",
-      "Price Club",
-      "Pierre Road",
-      "Uncle Khalid",
-      "Persad's D Food King",
-      "ChaseMart",
-      "Cedric Dookie Supermarket"
-        ],
-
-    pharmacy: [
-      "SuperPharm",
-      "Ellie's Medicine",
-      "Anands Pharmacy"
-    ],
-
-    beauty: [
-      "Pennywise",
-      "Sasha Cosmetics"
-    ],
-
-    variety: [
-      "BelAir Store",
-    ],
-
-    furniture: [
-      "Furniture Plus",
-      "Courts",
-      "Standards"
-    ],
-
-    books: [
-      "Charrans Bookstore",
-      "Unique Books and Sports Centre",
-      "RIK Bookstore",
-      "Paper Based Bookshop"
-    ]
-
-  };
-
-
+const [stores, setStores] = useState([]);
+const [search, setSearch] = useState("");
+ 
   const icons = {
     grocery:"🛒",
     pharmacy:"💊",
@@ -75,6 +28,28 @@ const colors = {
     books:"#fef3c7",
     variety:"#e0f2fe"
 };
+
+useEffect(() => {
+  fetchStores();
+}, [type]);
+
+
+async function fetchStores(){
+
+const { data, error } = await supabase
+.from("stores")
+.select("*")
+.eq("category", type)
+.order("featured", { ascending:false });
+
+
+console.log("STORES:", data);
+console.log("ERROR:", error);
+
+
+setStores(data || []);
+
+}
 
   return (
   <>
@@ -97,7 +72,22 @@ const colors = {
       <h1>
         {icons[type]} {type.charAt(0).toUpperCase() + type.slice(1)} Stores in Trinidad & Tobago
       </h1>
-
+<input
+  placeholder="Search stores..."
+  value={search}
+  onChange={(e)=>setSearch(e.target.value)}
+  style={{
+    width:"100%",
+    padding:"14px",
+    marginTop:"20px",
+    marginBottom:"20px",
+    borderRadius:"10px",
+    border:"2px solid #dcfce7",
+    outline:"none",
+    boxSizing:"border-box",
+    fontSize:"16px"
+  }}
+/>
       <div
       style={{
         display:"grid",
@@ -106,11 +96,17 @@ const colors = {
       }}
       >
 
-      {(stores[type] || []).map((store)=>(
+      {(stores
+.filter(store =>
+  store.name
+    .toLowerCase()
+    .includes(search.toLowerCase())
+)
+.map((store)=>
 
         <Link
-        key={store}
-        to={`/store/${store}`}
+        key={store.name}
+        to={`/store/${store.slug}`}
         style={{
           textDecoration:"none",
           color:"#333"
@@ -119,21 +115,55 @@ const colors = {
 
           <div
 style={{
-  background: colors[type],
+  background: store.partner_status === "founding"
+    ? "linear-gradient(180deg,#fffdf5,#fff7d6)"
+    : colors[type],
+
   padding:"20px",
   borderRadius:"18px",
+
+  border: store.partner_status === "founding"
+    ? "2px solid #facc15"
+    : "none",
+
   boxShadow:"0 8px 20px rgba(0,0,0,.12)",
   textAlign:"center"
 }}
 >
 
-            <div style={{fontSize:"40px"}}>
-              🏪
-            </div>
+           {store.logo_url ? (
 
+<img
+src={store.logo_url}
+alt={store.name}
+style={{
+width:"70px",
+height:"70px",
+objectFit:"contain",
+borderRadius:"12px",
+marginBottom:"10px"
+}}
+/>
+
+) : (
+
+<div style={{fontSize:"40px"}}>
+🏪
+</div>
+
+)}
             <h3>
-              {store}
-            </h3>
+ {store.name}
+</h3>
+{store.location && (
+<p>
+📍 {store.location}
+</p>
+)}
+
+<PartnerBadge 
+  status={store.partner_status}
+/>
 
             <p>
               View Prices →

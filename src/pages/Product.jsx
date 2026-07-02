@@ -497,37 +497,76 @@ borderRadius:"8px"
 
     {/* ACTION BUTTONS */}
 
-    <Link
-      to={`/submit-price?product=${product.id}`}
-      style={{
-        textDecoration:"none"
-      }}
-    >
 <AdBanner slot="5508363575" />
+
 <h2>
-Related Shopping
+  Related Shopping
 </h2>
 
+
 <Link
-to="/categories"
-style={{
-textDecoration:"none"
-}}
+  to={`/submit-price?product=${product.id}`}
+  style={{
+    textDecoration:"none"
+  }}
 >
-Browse all categories →
+  <button
+    style={{
+      width:"100%",
+      padding:"14px",
+      borderRadius:"12px",
+      border:"none",
+      marginTop:"15px",
+      fontSize:"16px",
+      cursor:"pointer"
+    }}
+  >
+    ➕ Submit a Price
+  </button>
 </Link>
 
 
-<br/>
+<Link
+  to="/categories"
+  style={{
+    textDecoration:"none"
+  }}
+>
+  <button
+    style={{
+      width:"100%",
+      padding:"14px",
+      borderRadius:"12px",
+      border:"none",
+      marginTop:"12px",
+      fontSize:"16px",
+      cursor:"pointer"
+    }}
+  >
+    Browse all categories →
+  </button>
+</Link>
 
 
 <Link
-to="/deals"
-style={{
-textDecoration:"none"
-}}
+  to="/deals"
+  style={{
+    textDecoration:"none"
+  }}
 >
-See today's deals →
+  <button
+    style={{
+      width:"100%",
+      padding:"14px",
+      borderRadius:"12px",
+      border:"none",
+      marginTop:"12px",
+      fontSize:"16px",
+      cursor:"pointer"
+    }}
+  >
+    See today's deals →
+  </button>
 </Link>
       <button
         style={{
@@ -543,11 +582,7 @@ See today's deals →
         ➕ Submit a Price
       </button>
 
-
-    </Link>
-
-
-
+  
     <a
       href={whatsappLink}
       target="_blank"
